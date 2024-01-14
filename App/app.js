@@ -45,41 +45,55 @@ const houseAreas = [
   {
     area: 'kitchen',
     stream: getHouseAreaStream(),
-    onAction: () => {
+    onAction: async() => {
         console.log("kitchen on action")
+        (await mqtt.getClusterAsync()).publishMessage('kitchen/lights','1000');
     },
-    offAction: () => {
+    offAction: async() => {
       console.log("kitchen off action")
+      (await mqtt.getClusterAsync()).publishMessage('kitchen/lights','0');
     }
   },
   {
     area: 'livingroom',
     stream: getHouseAreaStream(),
-    onAction: () => {
+    onAction: async() => {
       console.log("livingroom on action")
+      (await mqtt.getClusterAsync()).publishMessage('zigbee2mqtt/0x2c1165fffed897d3/set', JSON.stringify({ brightness: 254 }));
+      (await mqtt.getClusterAsync()).publishMessage('zigbee2mqtt/0x2c1165fffed8947e/set', JSON.stringify({ brightness: 254 }));
     },
-    offAction: () => {
+    offAction: async() => {
       console.log("livingroom off action")
+      (await mqtt.getClusterAsync()).publishMessage('zigbee2mqtt/0x2c1165fffed897d3/set', JSON.stringify({ brightness: 0 }));
+      (await mqtt.getClusterAsync()).publishMessage('zigbee2mqtt/0x2c1165fffed8947e/set', JSON.stringify({ brightness: 0 }));
     }
   },
   {
     area: 'aleroom',
     stream: getHouseAreaStream(),
-    onAction: () => {
+    onAction: async () => {
       console.log("aleroom on action")
+      (await mqtt.getClusterAsync()).publishMessage('zigbee2mqtt/0x0c4314fffe20d4f8/set',JSON.stringify({state:'ON'}));    
+      (await mqtt.getClusterAsync()).publishMessage('zigbee2mqtt/0x385b44fffee7a042/set',JSON.stringify({state:'ON'})); 
     },
-    offAction: () => {
+    offAction: async() => {
       console.log("aleroom off action")
+      (await mqtt.getClusterAsync()).publishMessage('zigbee2mqtt/0x0c4314fffe20d4f8/set',JSON.stringify({state:'OFF'}));    
+      (await mqtt.getClusterAsync()).publishMessage('zigbee2mqtt/0x385b44fffee7a042/set',JSON.stringify({state:'OFF'}));  
     }
   },
   {
     area: 'masterroom',
     stream: getHouseAreaStream(),
-    onAction: () => {
+    onAction: async() => {
       console.log("masterroom on action")
+      (await mqtt.getClusterAsync()).publishMessage('zigbee2mqtt/0x04cd15fffe9d3c8a/set', JSON.stringify({ brightness: 254 }));
+      (await mqtt.getClusterAsync()).publishMessage('zigbee2mqtt/0x04cd15fffe8a196d/set', JSON.stringify({ brightness: 254 }));
     },
-    offAction: () => {
+    offAction: async() => {
       console.log("masterroom off action")
+      (await mqtt.getClusterAsync()).publishMessage('zigbee2mqtt/0x04cd15fffe9d3c8a/set', JSON.stringify({ brightness: 0 }));
+      (await mqtt.getClusterAsync()).publishMessage('zigbee2mqtt/0x04cd15fffe8a196d/set', JSON.stringify({ brightness: 0 }));
     }
   }
 ]
