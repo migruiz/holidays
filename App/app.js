@@ -9,11 +9,13 @@ const { DateTime } = require('luxon');
 
 console.log(`kitchen lights current time ${DateTime.now()}`);
 global.mtqqLocalPath = 'mqtt://192.168.0.11';
-
+const START_MAX_DELAY = 15 * 60 * 1000
+const KEEP_ON_MIN = 20 * 60 * 1000
+const MAX_ON = 60 * 60 * 1000 - (START_MAX_DELAY + KEEP_ON_MIN)
 
 const everyHourStream = new Observable(subscriber => {
   new CronJob(
-    `* * * * *`,
+    `0 * * * *`,
     function () {
       subscriber.next(true);
     },
@@ -26,10 +28,10 @@ const everyHourStream = new Observable(subscriber => {
 
 const stream = everyHourStream.pipe(
   mergeMap(
-    _ => interval(5000).pipe(mapTo("on"), first())
+    _ => interval(Math.floor(Math.random() * START_MAX_DELAY) + 0).pipe(mapTo("on"), first())
   ),
   mergeMap(
-    onSignal => interval(5000).pipe(mapTo("off"), first(), startWith(onSignal))
+    onSignal => interval(Math.floor(Math.random() * MAX_ON) + KEEP_ON_MIN).pipe(mapTo("off"), first(), startWith(onSignal))
   )
 )
 
