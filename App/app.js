@@ -12,6 +12,7 @@ global.mtqqLocalPath = 'mqtt://192.168.0.11';
 const START_MAX_DELAY = 15 * 60 * 1000
 const KEEP_ON_MIN = 20 * 60 * 1000
 const MAX_ON = 60 * 60 * 1000 - (START_MAX_DELAY + KEEP_ON_MIN)
+const operationHours = [15, 16, 17, 18, 19, 20, 21, 22, 2, 4]
 
 
 const getHouseAreaStream = () => {
@@ -30,6 +31,7 @@ const getHouseAreaStream = () => {
 
 
   const stream = everyHourStream.pipe(
+    filter(_ => operationHours.includes(DateTime.now().hour)),
     mergeMap(
       _ => interval(Math.floor(Math.random() * START_MAX_DELAY) + 0).pipe(mapTo("on"), first())
     ),
@@ -44,40 +46,40 @@ const houseAreas = [
     area: 'kitchen',
     stream: getHouseAreaStream(),
     onAction: () => {
-
+        console.log("kitchen on action")
     },
     offAction: () => {
-
+      console.log("kitchen off action")
     }
   },
   {
     area: 'livingroom',
     stream: getHouseAreaStream(),
     onAction: () => {
-
+      console.log("livingroom on action")
     },
     offAction: () => {
-
+      console.log("livingroom off action")
     }
   },
   {
     area: 'aleroom',
     stream: getHouseAreaStream(),
     onAction: () => {
-
+      console.log("aleroom on action")
     },
     offAction: () => {
-
+      console.log("aleroom off action")
     }
   },
   {
     area: 'masterroom',
     stream: getHouseAreaStream(),
     onAction: () => {
-
+      console.log("masterroom on action")
     },
     offAction: () => {
-
+      console.log("masterroom off action")
     }
   }
 ]
