@@ -13,30 +13,87 @@ const START_MAX_DELAY = 15 * 60 * 1000
 const KEEP_ON_MIN = 20 * 60 * 1000
 const MAX_ON = 60 * 60 * 1000 - (START_MAX_DELAY + KEEP_ON_MIN)
 
-const everyHourStream = new Observable(subscriber => {
-  new CronJob(
-    `0 * * * *`,
-    function () {
-      subscriber.next(true);
-    },
-    null,
-    true,
-    'Europe/Dublin'
-  );
-});
+
+const getHouseAreaStream = () => {
+
+  const everyHourStream = new Observable(subscriber => {
+    new CronJob(
+      `0 * * * *`,
+      function () {
+        subscriber.next(true);
+      },
+      null,
+      true,
+      'Europe/Dublin'
+    );
+  });
 
 
-const stream = everyHourStream.pipe(
-  mergeMap(
-    _ => interval(Math.floor(Math.random() * START_MAX_DELAY) + 0).pipe(mapTo("on"), first())
-  ),
-  mergeMap(
-    onSignal => interval(Math.floor(Math.random() * MAX_ON) + KEEP_ON_MIN).pipe(mapTo("off"), first(), startWith(onSignal))
+  const stream = everyHourStream.pipe(
+    mergeMap(
+      _ => interval(Math.floor(Math.random() * START_MAX_DELAY) + 0).pipe(mapTo("on"), first())
+    ),
+    mergeMap(
+      onSignal => interval(Math.floor(Math.random() * MAX_ON) + KEEP_ON_MIN).pipe(mapTo("off"), first(), startWith(onSignal))
+    )
   )
-)
+  return stream;
+}
+const houseAreas = [
+  {
+    area: 'kitchen',
+    stream: getHouseAreaStream(),
+    onAction: () => {
 
-stream
-  .subscribe(async m => {
-    console.log(`${m} time ${DateTime.now()}`)
-  })
+    },
+    offAction: () => {
+
+    }
+  },
+  {
+    area: 'livingroom',
+    stream: getHouseAreaStream(),
+    onAction: () => {
+
+    },
+    offAction: () => {
+
+    }
+  },
+  {
+    area: 'aleroom',
+    stream: getHouseAreaStream(),
+    onAction: () => {
+
+    },
+    offAction: () => {
+
+    }
+  },
+  {
+    area: 'masterroom',
+    stream: getHouseAreaStream(),
+    onAction: () => {
+
+    },
+    offAction: () => {
+
+    }
+  }
+]
+
+for (const houseArea of houseAreas) {
+  houseArea.stream
+    .subscribe(async m => {
+      console.log(`${houseArea.area} - ${m} - time ${DateTime.now()}`)
+      if (m === 'on') {
+        houseArea.onAction();
+      }
+      else {
+        houseArea.offAction();
+      }
+    })
+}
+
+
 
