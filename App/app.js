@@ -65,18 +65,6 @@ const houseAreas = [
     }
   },
   {
-    area: 'aleroom',
-    stream: getHouseAreaStream(),
-    onAction: async () => {
-        (await mqtt.getClusterAsync()).publishMessage('zigbee2mqtt/0x0c4314fffe20d4f8/set', JSON.stringify({ state: 'ON' }));
-      (await mqtt.getClusterAsync()).publishMessage('zigbee2mqtt/0x385b44fffee7a042/set', JSON.stringify({ state: 'ON' }));
-    },
-    offAction: async () => {
-        (await mqtt.getClusterAsync()).publishMessage('zigbee2mqtt/0x0c4314fffe20d4f8/set', JSON.stringify({ state: 'OFF' }));
-      (await mqtt.getClusterAsync()).publishMessage('zigbee2mqtt/0x385b44fffee7a042/set', JSON.stringify({ state: 'OFF' }));
-    }
-  },
-  {
     area: 'masterroom',
     stream: getHouseAreaStream(),
     onAction: async () => {
@@ -87,6 +75,21 @@ const houseAreas = [
         (await mqtt.getClusterAsync()).publishMessage('zigbee2mqtt/0x04cd15fffe9d3c8a/set', JSON.stringify({ brightness: 0 }));
       (await mqtt.getClusterAsync()).publishMessage('zigbee2mqtt/0x04cd15fffe8a196d/set', JSON.stringify({ brightness: 0 }));
     }
+  }
+  ,
+  {
+    area: 'xmas',
+    stream: getHouseAreaStream(),
+    onAction: async () => {
+      (await mqtt.getClusterAsync()).publishMessage('zigbee2mqtt/0x0c2a6ffffe45c014/set', JSON.stringify({ state: 'ON' }));
+    (await mqtt.getClusterAsync()).publishMessage('zigbee2mqtt/0xa4c1388e3fe8b3b1/set', JSON.stringify({ state: 'ON' }));
+    (await mqtt.getClusterAsync()).publishMessage('zigbee2mqtt/0x385b44fffee7a042/set', JSON.stringify({ state: 'ON' }));
+  },
+  offAction: async () => {
+    (await mqtt.getClusterAsync()).publishMessage('zigbee2mqtt/0x0c2a6ffffe45c014/set', JSON.stringify({ state: 'OFF' }));
+    (await mqtt.getClusterAsync()).publishMessage('zigbee2mqtt/0xa4c1388e3fe8b3b1/set', JSON.stringify({ state: 'OFF' }));
+    (await mqtt.getClusterAsync()).publishMessage('zigbee2mqtt/0x385b44fffee7a042/set', JSON.stringify({ state: 'OFF' }));
+  }
   }
 ]
 
